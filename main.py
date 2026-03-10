@@ -10,6 +10,7 @@ from routeTable import (
     create_route_to_igw,
 )
 from destroy import destroy_everything
+from ami import get_latest_amazon_linux_2023_ami_id
 
 # Principle: Single Responsibility Principle (SRP) - Each function has a single responsibility, making the code easier to maintain and understand.
 
@@ -24,7 +25,10 @@ if __name__ == "__main__":
     attach_igw_to_vpc(ec2, igw_id, vpc_id)
     create_route_to_igw(ec2, route_table_id, igw_id)
     sg_id = create_security_group_for_Webserver(ec2, vpc_id)
-    instance_id = create_ec2_instance(ec2, subnet_id, sg_id)
+    ami_id = get_latest_amazon_linux_2023_ami_id(
+        boto3.client("ssm"), boto3.Session().region_name
+    )
+    instance_id = create_ec2_instance(ec2, subnet_id, sg_id, ami_id)
     destroy_everything(
         ec2, instance_id, vpc_id, subnet_id, igw_id, route_table_id, sg_id
     )
