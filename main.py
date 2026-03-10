@@ -32,3 +32,17 @@ if __name__ == "__main__":
     destroy_everything(
         ec2, instance_id, vpc_id, subnet_id, igw_id, route_table_id, sg_id
     )
+
+# What are things now that can be improved?
+# A LOT!
+# 1. Error handling: The code currently does not handle any potential errors that may occur during the execution of AWS operations. 
+#    Implementing try-except blocks around AWS API calls can help catch and handle exceptions gracefully.
+# 2. Logging: Instead of using print statements, consider using the logging module to provide
+#    more structured and configurable logging throughout the code. This will make it easier to debug and monitor the application.
+# 3. Configuration management: The code currently has hardcoded values (e.g., instance type, key name). It would be better 
+#    to use a configuration file or environment variables to manage these settings, making the code more flexible and easier to maintain.
+# 4. Modularization: While the code is organized into functions, it could be further modularized by separating concerns into different 
+#    classes or modules. For example, you could create a class for managing VPCs, another for EC2 instances, etc. This would improve code organization and readability.
+# 5. Resource cleanup: The destroy_everything function is a good start for cleaning up resources, but it could be enhanced to ensure that all 
+#    resources are properly deleted, even if some operations fail. Implementing a more robust cleanup mechanism that checks for the existence of
+#    resources before attempting to delete them can help prevent errors during cleanup.
