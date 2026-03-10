@@ -1,0 +1,3 @@
+# List all the dependencies for the project here
+# Example: Boto3
+boto3
