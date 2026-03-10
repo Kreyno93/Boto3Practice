@@ -1,48 +1,14 @@
-import boto3
-from ec2 import create_ec2_instance
-from sg import create_security_group_for_Webserver
-from vpc import create_vpc_with_cidr_block
-from subnet import create_subnet_in_vpc
-from igw import create_igw, attach_igw_to_vpc
-from routeTable import (
-    create_public_route_table,
-    associate_route_table_with_subnet,
-    create_route_to_igw,
-)
-from destroy import destroy_everything
-from ami import get_latest_amazon_linux_2023_ami_id
+#!/usr/bin/env python3
+"""Main entry point for AWS infrastructure provisioning."""
 
-# Principle: Single Responsibility Principle (SRP) - Each function has a single responsibility, making the code easier to maintain and understand.
+from aws_infra.orchestrator import InfrastructureManager
 
-ec2 = boto3.resource("ec2")
+
+def main():
+    manager = InfrastructureManager()
+    manager.provision()
+    manager.destroy()
+
 
 if __name__ == "__main__":
-    vpc_id = create_vpc_with_cidr_block(ec2)
-    subnet_id = create_subnet_in_vpc(ec2, vpc_id)
-    route_table_id = create_public_route_table(ec2, vpc_id)
-    associate_route_table_with_subnet(ec2, route_table_id, subnet_id)
-    igw_id = create_igw(ec2, vpc_id)
-    attach_igw_to_vpc(ec2, igw_id, vpc_id)
-    create_route_to_igw(ec2, route_table_id, igw_id)
-    sg_id = create_security_group_for_Webserver(ec2, vpc_id)
-    ami_id = get_latest_amazon_linux_2023_ami_id(
-        boto3.client("ssm"), boto3.Session().region_name
-    )
-    instance_id = create_ec2_instance(ec2, subnet_id, sg_id, ami_id)
-    destroy_everything(
-        ec2, instance_id, vpc_id, subnet_id, igw_id, route_table_id, sg_id
-    )
-
-# What are things now that can be improved?
-# A LOT!
-# 1. Error handling: The code currently does not handle any potential errors that may occur during the execution of AWS operations. 
-#    Implementing try-except blocks around AWS API calls can help catch and handle exceptions gracefully.
-# 2. Logging: Instead of using print statements, consider using the logging module to provide
-#    more structured and configurable logging throughout the code. This will make it easier to debug and monitor the application.
-# 3. Configuration management: The code currently has hardcoded values (e.g., instance type, key name). It would be better 
-#    to use a configuration file or environment variables to manage these settings, making the code more flexible and easier to maintain.
-# 4. Modularization: While the code is organized into functions, it could be further modularized by separating concerns into different 
-#    classes or modules. For example, you could create a class for managing VPCs, another for EC2 instances, etc. This would improve code organization and readability.
-# 5. Resource cleanup: The destroy_everything function is a good start for cleaning up resources, but it could be enhanced to ensure that all 
-#    resources are properly deleted, even if some operations fail. Implementing a more robust cleanup mechanism that checks for the existence of
-#    resources before attempting to delete them can help prevent errors during cleanup.
+    main()

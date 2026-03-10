@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galaxy View</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
+      background-size: 200% 200%;
+      animation: spaceFlow 30s ease infinite;
+      color: #c084fc; /* Violet */
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(192, 132, 252, 0.8);
+    }
+
+    @keyframes spaceFlow {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .glow {
+      box-shadow: 0 0 30px 15px rgba(147, 112, 219, 0.5);
+      border-radius: 20px;
+    }
+
+    h1 {
+      color: #e0b3ff;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center text-center font-sans px-4">
+  <div>
+    <h1 class="text-6xl mb-6 tracking-wide animate-pulse">Welcome to the Galaxy</h1>
+    <img
+      src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpaperaccess.com%2Ffull%2F439038.jpg&f=1&nofb=1&ipt=264929098c3b5845d79d657cb7d74d1635ec580824da5da17f15b720dd566613"
+      alt="Galaxy"
+      class="mx-auto max-w-xl glow"
+    />
+    <p class="mt-8 text-xl max-w-2xl mx-auto">
+      Drift among the stars. Explore the boundless cosmos. Let your imagination soar through this digital nebula.
+    </p>
+  </div>
+</body>
+</html>
+

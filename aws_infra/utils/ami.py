@@ -1,5 +1,7 @@
-def get_latest_amazon_linux_2023_ami_id(ssm, region):
+"""AMI utilities."""
 
+
+def get_latest_amazon_linux_2023_ami(ssm, region):
     parameter = ssm.get_parameter(
         Name="/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
     )

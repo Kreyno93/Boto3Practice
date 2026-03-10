@@ -44,12 +44,11 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Update the following values in `ec2.py` if needed:
-- `ImageId`: AMI ID (default: Amazon Linux 2023)
-- `InstanceType`: Instance size (default: t3.small)
-- `KeyName`: SSH key pair name (default: vockey)
-
-Update CIDR blocks in `vpc.py` and `subnet.py` if custom networking is required.
+All configuration is centralized in `aws_infra/config.py`. Update values as needed:
+- VPC and Subnet CIDR blocks
+- Instance type and key pair name
+- Security group settings
+- Resource naming conventions
 
 ## Usage
 
@@ -71,17 +70,25 @@ The script will:
 
 ```
 boto3Practice/
-├── main.py              # Main orchestration script
-├── vpc.py               # VPC creation
-├── subnet.py            # Subnet creation
-├── igw.py               # Internet Gateway setup
-├── routeTable.py        # Route table configuration
-├── sg.py                # Security group setup
-├── ec2.py               # EC2 instance provisioning
-├── destroy.py           # Resource cleanup
-├── userdata.sh          # EC2 user data script
-├── requirements.txt     # Python dependencies
-└── .gitignore          # Git ignore rules
+├── main.py                          # Main entry point
+├── aws_infra/                       # Main package
+│   ├── __init__.py
+│   ├── config.py                    # Configuration settings
+│   ├── orchestrator.py              # Infrastructure orchestration
+│   ├── resources/                   # AWS resource modules
+│   │   ├── __init__.py
+│   │   ├── vpc.py                   # VPC management
+│   │   ├── subnet.py                # Subnet management
+│   │   ├── igw.py                   # Internet Gateway management
+│   │   ├── route_table.py           # Route table management
+│   │   ├── security_group.py        # Security group management
+│   │   └── ec2.py                   # EC2 instance management
+│   └── utils/                       # Utility modules
+│       ├── __init__.py
+│       └── ami.py                   # AMI utilities
+├── userdata.sh                      # EC2 user data script
+├── requirements.txt                 # Python dependencies
+└── .gitignore                       # Git ignore rules
 ```
 
 ## Architecture
