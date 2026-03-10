@@ -1,27 +1,30 @@
 import boto3
 from ec2 import create_ec2_instance
-
-
-def create_vpc_with_cidr_block():
-    # Create VPC with CIDR block
-    ec2 = boto3.resource("ec2")
-
-    vpc = ec2.create_vpc(CidrBlock="10.0.0.0/24")
-    print("Created VPC with ID:", vpc.id)
-
+from sg import create_security_group_for_Webserver
+from vpc import create_vpc_with_cidr_block
+from subnet import create_subnet_in_vpc
+from igw import create_igw, attach_igw_to_vpc
+from routeTable import (
+    create_public_route_table,
+    associate_route_table_with_subnet,
+    create_route_to_igw,
+)
+from destroy import destroy_everything
 
 # Principle: Single Responsibility Principle (SRP) - Each function has a single responsibility, making the code easier to maintain and understand.
 
-
-def create_subnet_in_vpc(vpc_id):
-    # Create Subnet in the VPC
-    ec2 = boto3.resource("ec2")
-
-    subnet = ec2.create_subnet(VpcId=vpc_id, CidrBlock="10.0.0.0/26")
-    print("Created Subnet with ID:", subnet.id)
-
+ec2 = boto3.resource("ec2")
 
 if __name__ == "__main__":
-    create_ec2_instance()
-    create_vpc_with_cidr_block()
-    # Assuming you have a VPC ID, you can create a subnet in it
+    vpc_id = create_vpc_with_cidr_block(ec2)
+    subnet_id = create_subnet_in_vpc(ec2, vpc_id)
+    route_table_id = create_public_route_table(ec2, vpc_id)
+    associate_route_table_with_subnet(ec2, route_table_id, subnet_id)
+    igw_id = create_igw(ec2, vpc_id)
+    attach_igw_to_vpc(ec2, igw_id, vpc_id)
+    create_route_to_igw(ec2, route_table_id, igw_id)
+    sg_id = create_security_group_for_Webserver(ec2, vpc_id)
+    instance_id = create_ec2_instance(ec2, subnet_id, sg_id)
+    destroy_everything(
+        ec2, instance_id, vpc_id, subnet_id, igw_id, route_table_id, sg_id
+    )
